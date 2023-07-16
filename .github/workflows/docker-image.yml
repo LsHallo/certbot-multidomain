@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build-ets2:
+  build-push-image:
     runs-on: ubuntu-latest
     permissions:
       contents: read
