@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  certbot:
+    container_name: certbot
+    restart: unless-stopped
+    build: .
+    environment:
+      - "DEBUG=True"
+    volumes:
+      - ./config.yml:/app/config.yml
+      - ./dns:/app/dns
+      - ./certs:/app/certs
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  nginx:
+    container_name: nginx
+    restart: unless-stopped
+    image: linuxserver/nginx
+    ports:
+      - "80:80"
+      - "443:443"

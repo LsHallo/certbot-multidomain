@@ -1,0 +1,17 @@
+domains:
+  foo.com:
+    subdomains: wildcard # generate cert for *.foo.com and foo.com
+    provider: cloudflare # dns plugin to use. only cloudflare supported (for now)
+    email: admin@foo.com  # used for cert expiry notifications by letsencrypt
+    dns_credentials_file: /app/dns/foo.com.ini # path to mounted file with cloudflare api key
+
+  bar.net:
+    subdomains:
+      - www
+      - demo
+      - dev
+      - test
+    cert_name: bar.net # cert name (optional); defaults to domain name
+    provider: cloudflare  # dns plugin to use. only cloudflare supported (for now)
+    email: admin@bar.net # used for cert expiry notifications by letsencrypt
+    dns_credentials_file: /app/dns/bar.net.ini  # path to mounted file with cloudflare api key
