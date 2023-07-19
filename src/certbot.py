@@ -21,7 +21,7 @@ import os
 
 # Load & parse config file
 config: dict = None
-logger.debug(f"Opening & parsing config file 'f{CONFIG_PATH}'...")
+logger.debug(f"Opening & parsing config file '{CONFIG_PATH}'...")
 with open(CONFIG_PATH, 'r') as f:
     config = yaml.safe_load(f)
 
