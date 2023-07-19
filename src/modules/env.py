@@ -8,10 +8,10 @@ parser.add_argument('-o', '--cert_output_path', type=str, help="Path to cert out
 parser.add_argument('-n', '--nginx_container_name', type=str, help="Name of the nginx container that should be reloaded to load new certs")
 args = parser.parse_args()
 
-IS_DEBUG = args['d'] or os.getenv('DEBUG')
-CONFIG_PATH = args['c'] or os.getenv('CONFIG_PATH') or '/app/config.yml'
-CERT_OUTPUT_PATH = args['o'] or os.getenv('CERT_OUTPUT_PATH') or '/app/certs'
-NGINX_CONTAINER_NAME = args['n'] or os.getenv('NGINX_CONTAINER_NAME') or 'nginx'
+IS_DEBUG = args.debug or os.getenv('DEBUG')
+CONFIG_PATH = args.config_path or os.getenv('CONFIG_PATH') or '/app/config.yml'
+CERT_OUTPUT_PATH = args.cert_output_path or os.getenv('CERT_OUTPUT_PATH') or '/app/certs'
+NGINX_CONTAINER_NAME = args.nginx_container_name or os.getenv('NGINX_CONTAINER_NAME') or 'nginx'
 
 if not os.path.exists(CONFIG_PATH): raise FileNotFoundError(f"Config file not found! ({CONFIG_PATH})")
 if not os.path.exists(CERT_OUTPUT_PATH): raise FileNotFoundError(f"Output path not found! ({CERT_OUTPUT_PATH})")

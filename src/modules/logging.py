@@ -179,7 +179,6 @@ class _CustomColourFormatter(logging.Formatter):
             (logging.NOTSET,   '\x1b[30;1m'),
             (logging.DEBUG,    '\x1b[35;1m'),
             (logging.INFO,     '\x1b[37;1m'),
-            (logging.NOTICE,   '\x1b[32;1m'), # Custom logging level
             (logging.WARNING,  '\x1b[33;1m'),
             (logging.ERROR,    '\x1b[31;1m'),
             (logging.CRITICAL, '\x1b[41;1m'),
