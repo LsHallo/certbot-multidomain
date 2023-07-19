@@ -277,6 +277,6 @@ def setup_logging() -> None:
         if issubclass(exc_type, KeyboardInterrupt):
             root_logger.critical("KeyboardInterrupt received.")
         else:
-            root_logger.critical("Bot has encountered an unhandled exception!", exc_info=(exc_type, exc_value, exc_traceback))
+            root_logger.critical("Application has encountered an unhandled exception!", exc_info=(exc_type, exc_value, exc_traceback))
 
     sys.excepthook = _handle_uncaught_exception
