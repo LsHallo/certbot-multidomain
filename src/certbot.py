@@ -1,9 +1,9 @@
-# Parse & get environment variables
-from modules.env import *
-
 # Custom logging setup
 from modules.logging import setup_logging, get_logger
 setup_logging()
+
+# Parse & get environment variables
+from modules.env import *
 
 # Create application logger
 logger = get_logger('Certbot Multidomain', IS_DEBUG)
