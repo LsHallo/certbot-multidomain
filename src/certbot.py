@@ -5,10 +5,6 @@ setup_logging()
 # Parse & get environment variables
 from modules.env import *
 
-# Create application logger
-logger = get_logger('Certbot Multidomain', IS_DEBUG)
-logger.debug("DEBUG MODE ENABLED!")
-
 # Library imports
 import subprocess
 import schedule
@@ -17,6 +13,11 @@ import shlex
 import time
 import yaml
 import os
+
+
+# Create application logger
+logger = get_logger('Certbot Multidomain', IS_DEBUG)
+logger.debug("DEBUG MODE ENABLED!")
 
 
 # Load & parse config file
