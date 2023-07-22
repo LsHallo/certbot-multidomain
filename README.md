@@ -3,7 +3,8 @@
 Requests certificates for multiple domains using certbot and letsencrypt.  
 Currently only dns-cloudflare plugin is supported to generate certificates.
 
-Subdomains can be specified per domain. Wildcard certificates are also possible.
+Subdomains can be specified per domain. Wildcard certificates are also possible.  
+Will create separate certificates for each domain. No pollution of the alternative name in your certs.  
 
 ## Environment Variables
 
@@ -15,26 +16,7 @@ Subdomains can be specified per domain. Wildcard certificates are also possible.
 | DEBUG                |                 | Enable debug output and generate only staging certificates            |  
 
 ## Example Configuration
-config.yml
-```yml
-domains:
-  foo.com:
-    subdomains: wildcard # generate cert for *.foo.com and foo.com
-    provider: cloudflare # dns plugin to use. only cloudflare supported (for now)
-    email: admin@foo.com  # used for cert expiry notifications by letsencrypt
-    dns_credentials_file: /app/dns/foo.com.ini # path to mounted file with cloudflare api key
-
-  bar.net:
-    subdomains:
-      - www
-      - demo
-      - dev
-      - test
-    cert_name: bar.net # cert name (optional); defaults to domain name
-    provider: cloudflare  # dns plugin to use. only cloudflare supported (for now)
-    email: admin@bar.net # used for cert expiry notifications by letsencrypt
-    dns_credentials_file: /app/dns/bar.net.ini  # path to mounted file with cloudflare api key
-```
+Example config.yml can be found [here](config.example.yml)  
 `cert_name` defines the path the cert will be available under afterward.  
 In combination with the env variable `CONFIG_PATH` the cert path will be as follows:
 `${CONFIG_PATH}/live/${CERT_NAME}/fullchain.pem`
@@ -45,25 +27,4 @@ Mounted `/home/foo/certbot/dns` as `/app/dns` inside the docker container.
 The `dns_credential_file` should then be specified as `/app/dns/foo.com.ini`
 
 ## Example docker-compose.yml
-```yml
-version: '3'
-
-services:
-  certbot:
-    image: lshallo/certbot-multidomain
-    container_name: certbot
-    restart: unless-stopped
-    volumes:
-      - ./config.yml:/app/config.yml
-      - ./dns:/app/dns
-      - ./certs:/app/certs
-      - /var/run/docker.sock:/var/run/docker.sock
-
-  nginx:
-    image: linuxserver/nginx
-    container_name: nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-```
+Example docker-compose.yml can be found [here](docker-compose.example.yml)  
