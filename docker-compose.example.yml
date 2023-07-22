@@ -5,12 +5,19 @@ services:
     image: lshallo/certbot-multidomain
     container_name: certbot
     restart: unless-stopped
+    environment:
+      - CONFIG_PATH=/app/config.yml # path to config
+      - CERT_OUTPUT_PATH=/app/certs # destination for generated certs
+      - NGINX_CONTAINER_NAME=nginx # name of container to restart after renew
+      # - DEBUG=True # set to True to enable debugging
     volumes:
-      - ./config.yml:/app/config.yml
-      - ./dns:/app/dns
-      - ./certs:/app/certs
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config.yml:/app/config.yml # path to config.yml. local path can be anything. just make sure the rightp part matches that of the env variable
+      - ./dns:/app/dns # folder for dns config files. set path in config.yml
+      - ./certs:/app/certs # map destinatio certs to local cert directory to share with nginx
+      - /var/run/docker.sock:/var/run/docker.sock # mount docker sock to restart nginx container after renew
 
+  # This is just an example nginx container.
+  # Use your own flavor
   nginx:
     container_name: nginx
     restart: unless-stopped
@@ -18,3 +25,5 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    volumes:
+      - ./certs:/certs:ro # certs will be accesible with /certs/live/[domain]/fullchain.pem
