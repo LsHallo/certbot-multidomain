@@ -1,4 +1,5 @@
 # Certbot Multi Domain Docker Container
+![](https://github.com/LsHallo/certbot-multidomain/actions/workflows/docker-image.yml/badge.svg)
 
 Requests certificates for multiple domains using certbot and letsencrypt.  
 Currently only dns-cloudflare plugin is supported to generate certificates.
