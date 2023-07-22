@@ -16,8 +16,7 @@ RUN curl https://get.docker.com | sh \
 COPY requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 
-COPY src/* /app
+COPY src/ /app
 
 ENTRYPOINT ["python3", "-u"]
 CMD ["/app/certbot.py"]
-
