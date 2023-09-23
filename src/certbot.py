@@ -43,7 +43,7 @@ def request_initial_certs():
         else:
             logger.info(f"Requesting new certificate for {key}.")
             domain_list = generate_domain_list(key, domain)
-            certbot_cmd = f"certbot certonly --non-interactive --no-autorenew {'-v --test-cert' if IS_DEBUG else ''} --dns-cloudflare --dns-cloudflare-credentials {domain.get('dns_credentials_file')} --dns-cloudflare-propagation-seconds 25 --email {domain.get('email')} --no-eff-email --agree-tos --config-dir {CERT_OUTPUT_PATH} --rsa-key-size 4096 --cert-name {domain.get('cert_name', key)} {domain_list}"
+            certbot_cmd = f"certbot certonly --non-interactive {'-v --test-cert' if IS_DEBUG else ''} --dns-cloudflare --dns-cloudflare-credentials {domain.get('dns_credentials_file')} --dns-cloudflare-propagation-seconds 25 --email {domain.get('email')} --no-eff-email --agree-tos --config-dir {CERT_OUTPUT_PATH} --rsa-key-size 4096 --cert-name {domain.get('cert_name', key)} {domain_list}"
             logger.debug(f"Certbot command line: {certbot_cmd}")
             certbot_cmd = shlex.split(certbot_cmd)
             
@@ -62,6 +62,7 @@ def renew_certs():
     Certbot will be called to renew all certificates in the output directory.
     
     """
+    logger.info("Renewing certs that will expire soon.")
     certbot_cmd = f"certbot renew --config-dir {CERT_OUTPUT_PATH} {'--dry-run' if IS_DEBUG else ''}"
     logger.debug(f"Certbot command line: {certbot_cmd}")
     certbot_cmd = shlex.split(certbot_cmd)
@@ -79,6 +80,7 @@ def renew_certs():
     else:
         logger.error("Nginx reload failed! See above for details.")
         logger.debug(f"Exit code: {ret_code}")
+    logger.info("Renew complete.")
 
 
 def generate_domain_list(key: str, domain: dict):
