@@ -1,4 +1,9 @@
 # Custom logging setup
+from datetime import datetime, timezone, timedelta
+from typing import Literal, LiteralString
+
+from cryptography import x509
+
 from modules.logging import setup_logging, get_logger
 setup_logging()
 
@@ -27,6 +32,41 @@ with open(CONFIG_PATH, 'r') as f:
     config = yaml.safe_load(f)
 
 
+def is_valid(cert_path: LiteralString | str | bytes) -> bool:
+    with open(cert_path, "rb") as cert_file:
+        certs = x509.load_pem_x509_certificates(cert_file.read())
+
+    if not certs:
+        raise ValueError("No certificates found in PEM file")
+
+    # Find the leaf certificate (CA:FALSE).
+    leaf_certs = []
+
+    for cert in certs:
+        try:
+            constraints = cert.extensions.get_extension_for_class(
+                x509.BasicConstraints
+            ).value
+        except x509.ExtensionNotFound:
+            continue
+
+        if not constraints.ca:
+            leaf_certs.append(cert)
+
+    if len(leaf_certs) != 1:
+        raise ValueError(
+            f"Expected exactly one leaf certificate, found {len(leaf_certs)}"
+        )
+
+    cert = leaf_certs[0]
+
+    logger.debug(f"Cert expiry: {cert.not_valid_after_utc}")
+
+    return cert.not_valid_after_utc > (
+        datetime.now(timezone.utc) + timedelta(days=30)
+    )
+
+
 def request_initial_certs():
     """
     Request initial certificates for configured domains.
@@ -36,7 +76,7 @@ def request_initial_certs():
     for key, domain in config.get("domains").items():
         cert_path = os.path.join(CERT_OUTPUT_PATH, 'live', domain.get("cert_name", key), 'fullchain.pem')
         logger.debug(f"Checking for existing cert {cert_path}")
-        if os.path.isfile(cert_path):
+        if os.path.isfile(cert_path) and is_valid(cert_path):
             logger.info(f"Cert for {key} exists. Just creating renew job.")
             continue
 
