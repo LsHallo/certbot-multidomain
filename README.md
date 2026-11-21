@@ -28,4 +28,24 @@ Mounted `/home/foo/certbot/dns` as `/app/dns` inside the docker container.
 The `dns_credential_file` should then be specified as `/app/dns/foo.com.ini`
 
 ## Example docker-compose.yml
-Example docker-compose.yml can be found [here](docker-compose.example.yml)  
+Example docker-compose.yml can be found [here](docker-compose.example.yml)
+
+## Known Issues
+The container will log the following message when renewing a cert:
+```
+dns_cloudflare.py:108: PendingDeprecationWarning:
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   WARNING  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! You're seeing this warning because you've upgraded the Python package 'cloudflare' to version  !!
+!! 2.20.* via an automated upgrade without version pinning. Version 2.20.0 exists to catch any    !!
+!! of these upgrades before Cloudflare releases a new major release under the release number 3.x. !!
+!!                                                                                                !!
+!! Should you determine that you need to revert this upgrade and pin to v2.19.* it is recommended !!
+!! you do the following: pip install --upgrade cloudflare==2.19.* or equivilant.                  !!
+!!                                                                                                !!
+!! Or you can upgrade to v3.x. NOTE: Release 3.x will not be code-compatible or call-compatible   !!
+!! with previous releases. To see more about upgrading to next major version, please see:         !!
+!! https://github.com/cloudflare/python-cloudflare/discussions/191                                !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+```
+This is expected and just a warning about an upcoming version change of cloudflare python package.  
+This will be resolved with debian sid (14) in the future.
